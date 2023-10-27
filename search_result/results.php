@@ -12,7 +12,7 @@ $mysql = new mysqli(
     "webdev.iyaserver.com",
     "louisxie_user1",
     "sampleimport",
-    "louisexie_IPImportTest"
+    "louisxie_IPImportTest"
 );
 
 //connection error test
@@ -22,7 +22,7 @@ if($mysql->connect_errno){
 }
 
 //sql statement
-$sql = "SELECT * FROM xie_import_6000";
+$sql = "SELECT * FROM xie_import_6000 ";
 
 
 //get search results
@@ -64,7 +64,7 @@ echo "</div>";
         <?php
             while($currentrow = mysqli_fetch_assoc($results)){
                 echo "<div class='fields'><strong>title:</strong>";
-                echo $currentrow['title']. "<br>";
+                echo $currentrow[$searchTitle]. "<br>";
                 echo "<strong>DOI:</strong>". $currentrow['doi']. "<br>";
                 echo "<strong>Author:</strong>".$currentrow['author']."<br>";
                 echo "<strong>Category:</strong>".$currentrow['categories'];
