@@ -2,7 +2,9 @@
 <head>
     <title>ARX-IF Results</title>
     <style>
-
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -22,7 +24,10 @@ if($mysql->connect_errno){
 }
 
 //sql statement
-$sql = "SELECT * FROM xie_import_6000 ";
+$titleSql = "SELECT * FROM xie_import_6000 ";
+$authorSql = "SELECT * FROM xie_import_6000 ";
+$categorySql = "SELECT * FROM paper_x_user ";
+$DOISql = "SELECT * FROM xie_import_6000 ";
 
 
 //get search results
@@ -32,29 +37,53 @@ $searchDOI = $_REQUEST['doi'];
 $searchCategory = $_REQUEST['categories'];
 
 //filters
-if($searchTitle){
-    $sql.= "WHERE title LIKE '%". $searchTitle. "'%";
-}if($searchAuthor){
-    $sql.= "WHERE author LIKE '%". $searchAuthor. "'%";
-}if($searchDOI){
-    $sql.= "WHERE doi =". $searchDOI;
+if($searchTitle != ''){
+    $titleSql.= "WHERE title LIKE '%". $searchTitle. "%'";
+}if($searchAuthor!= ''){
+    $authorSql.= "WHERE authors LIKE ". $searchAuthor. "%'";
+}if($searchDOI!= ''){
+    $DOISql.= "WHERE doi = ". $searchDOI;
 }if($searchCategory != "ALL"){
-    $sql.= "WHERE categories =". $searchCategory;
+    $categorySql.= "WHERE categories = '". $searchCategory. "'";
 }
-//sotre results in a variable called results
-$results = $mysql->query($sql);
+//store results in a appropriate variables variable
+$titleResults = $mysql->query($titleSql);
+$authorResults = $mysql->query($authorSql);
+$categoryResults = $mysql->query($categorySql);
+$DOIResults = $mysql->query($DOISql);
 
 //results error
-if(!$results){
+if(!$titleResults){
     echo "<hr>SQL Error:". $mysql->error. "<br>";
-    echo "Output SQL:". $sql. "</hr>";
+    echo "Output SQL:". $titleSql. "</hr>";
+}if(!$authorResults){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $authorSql. "</hr>";
+}if(!$categoryResults){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $categorySql. "</hr>";
+}if(!$DOIResults){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $DOISql. "</hr>";
 }
 
 // Display search terms and record count
 echo "<div id='title'>";
 echo "<h1>Search Results</h1>";
-echo "You searched for class: <strong>$searchTitle</strong>";
-echo "Number of records found: <strong>" . $results->num_rows . "</strong><br><br>";
+if($searchTitle !=''){
+    echo "You searched for: <strong>$searchTitle</strong><br>";
+    echo "Number of records found: <strong>" . $titleResults->num_rows . "</strong><br><br>";
+
+}if($searchAuthor !=''){
+    echo "You searched for: <strong>$searchAuthor</strong><br>";
+    echo "Number of records found: <strong>" . $authorResults->num_rows . "</strong><br><br>";
+
+}if($searchDOI !=''){
+    echo "You searched for: <strong>$searchDOI</strong><br>";
+    echo "Number of records found: <strong>" . $DOIResults->num_rows . "</strong><br><br>";
+
+}
+
 echo "</div>";
 
 ?>
@@ -62,14 +91,20 @@ echo "</div>";
 <!--display results-->
     <div id="container">
         <?php
-            while($currentrow = mysqli_fetch_assoc($results)){
-                echo "<div class='fields'><strong>title:</strong>";
-                echo $currentrow[$searchTitle]. "<br>";
-                echo "<strong>DOI:</strong>". $currentrow['doi']. "<br>";
-                echo "<strong>Author:</strong>".$currentrow['author']."<br>";
-                echo "<strong>Category:</strong>".$currentrow['categories'];
-                echo "</div><br>";
+            while($Tcurrentrow = mysqli_fetch_assoc($titleResults)) {
+                echo "<div class='fields'><strong>title:</strong> ";
+                echo $Tcurrentrow['title']. "<br>";
             }
+//            while($Acurrentrow = mysqli_fetch_assoc($authorResults)){
+//                echo "<strong>DOI:</strong>". $Acurrentrow['authors']. "<br>";
+//
+//            }
+//            while($Ccurrentrow = mysqli_fetch_assoc($categoryResults)) {
+//                echo "<strong>Author:</strong>" . $Ccurrentrow['category'] . "<br>";
+//            }
+//            while($DOIcurrentrow = mysqli_fetch_assoc($DOIResults)) {
+//                echo "<strong>Author:</strong>" . $DOIcurrentrow['doi'] . "<br>";
+//            }
 
 
         ?>
