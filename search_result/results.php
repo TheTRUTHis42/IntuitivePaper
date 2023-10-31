@@ -95,16 +95,16 @@ echo "</div>";
                 echo "<div class='fields'><strong>title:</strong> ";
                 echo $Tcurrentrow['title']. "<br>";
             }
-//            while($Acurrentrow = mysqli_fetch_assoc($authorResults)){
-//                echo "<strong>DOI:</strong>". $Acurrentrow['authors']. "<br>";
-//
-//            }
-//            while($Ccurrentrow = mysqli_fetch_assoc($categoryResults)) {
-//                echo "<strong>Author:</strong>" . $Ccurrentrow['category'] . "<br>";
-//            }
-//            while($DOIcurrentrow = mysqli_fetch_assoc($DOIResults)) {
-//                echo "<strong>Author:</strong>" . $DOIcurrentrow['doi'] . "<br>";
-//            }
+            while($Acurrentrow = mysqli_fetch_assoc($authorResults)){
+                echo "<strong>DOI:</strong>". $Acurrentrow['authors']. "<br>";
+
+            }
+            while($Ccurrentrow = mysqli_fetch_assoc($categoryResults)) {
+                echo "<strong>Author:</strong>" . $Ccurrentrow['category'] . "<br>";
+            }
+            while($DOIcurrentrow = mysqli_fetch_assoc($DOIResults)) {
+                echo "<strong>Author:</strong>" . $DOIcurrentrow['doi'] . "<br>";
+            }
 
 
         ?>
