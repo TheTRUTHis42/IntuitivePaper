@@ -61,7 +61,7 @@ var_dump($sql);
 ?>
 
 <!--title-->
-<div id="title"><h1>Search for Papers</h1></div>
+<div id="title"><h1>Search for Papersv2</h1></div>
 
 <!--search form-->
 <div id="form">
