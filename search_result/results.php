@@ -69,7 +69,7 @@ if(!$titleResults){
 
 // Display search terms and record count
 echo "<div id='title'>";
-echo "<h1>Search Resultsv2</h1>";
+echo "<h1>Search Results</h1>";
 if($searchTitle !=''){
     echo "You searched for: <strong>$searchTitle</strong><br>";
     echo "Number of records found: <strong>" . $titleResults->num_rows . "</strong><br><br>";
