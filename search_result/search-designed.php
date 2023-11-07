@@ -34,6 +34,9 @@ $results = $mysql->query($sql);
                 <p class="mt-3 text-lg font-medium text-gray-500">Find the best research on ArXiv</p>
                 <form action="results-designed.php" method="GET" class="mt-8 flex flex-row items-center space-x-4">
                     <input name="search_title" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search here" />
+                    <input type="hidden" name="author" value="" placeholder="Author">
+                    <input type="hidden" name="doi" value="" placeholder="Search by doi">
+                    <input type="hidden" name="categories" value="ALL" placeholder="Search by doi">
                     <button style="background-color: #2D1F63;" class="rounded-full p-4 shadow-sm border-none focus:outline-none">
                         <img src="assets/search.svg" class="w-8" />
                     </button>

@@ -42,7 +42,20 @@ if($searchTitle != ''){
 //store results in a appropriate variables variable
 $results = $mysql->query($sql);
 
-print_r($results->fetch_assoc());
+//results error
+if(!$results){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $sql. "</hr>";
+}if(!$results){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $sql. "</hr>";
+}if(!$results){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $sql. "</hr>";
+}if(!$results){
+    echo "<hr>SQL Error:". $mysql->error. "<br>";
+    echo "Output SQL:". $sql. "</hr>";
+}
 ?>
 
 <div className="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">
@@ -61,22 +74,25 @@ print_r($results->fetch_assoc());
                 <p class="mt-2 text-md text-gray-500">We found <?php echo $results->num_rows; ?> matches.</p>
                 <div class="mt-5 space-y-6">
                   <?php
-                    while($curentrow = mysqli_fetch_assoc($results)) {
+                    $counter = 1;
+                    while($row = mysqli_fetch_assoc($results)) {
                   ?>
                     <div class="flex flex-row items-start space-x-4">
-                      <span class="text-xl font-medium">[1]</span>
-                        <div class="">
-                          <div class="flex flex-row items-center space-x-3">
-                          <h5 class="text-lg font-medium">Title</h5>
+                      <span class="text-xl font-medium">[<?php echo $counter; ?>]</span>
+                      <div class="">
+                        <div class="flex flex-row items-center space-x-3 flex-wrap">
+                          <h5 class="text-lg font-medium"><?php echo $row['title']; ?></h5>
                           <div class="flex flex-row items-center justify-center flex-wrap">
-                            <span class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">vision-enabled LLMs</span>
+                            <span class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100"><?php echo $row['categories']; ?></span>
                           </div>
                         </div>
-                        <p class="mt-0 text-md text-gray-500"><?php echo $curentrow['doi']; ?></p>
-                        <a class="block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="" target="_blank" rel="noreferrer">Click here for the full PDF</a>
+                        <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
+                        <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
+                        <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $row['id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                       </div>
                     </div>
                   <?php
+                    $counter++;
                     }
                   ?>
                 </div>
