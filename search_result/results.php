@@ -1,13 +1,10 @@
-<html lang = "eng">
+<html lang = "en">
 <head>
-    <title>ARX-IF Results</title>
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-    </style>
+    <title>ARX-IF Database Search Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
+
 <?php
 //database connection
 $mysql = new mysqli(
@@ -59,40 +56,53 @@ if(!$results){
     echo "<hr>SQL Error:". $mysql->error. "<br>";
     echo "Output SQL:". $sql. "</hr>";
 }
-
-// Display search terms and record count
-echo "<div id='title'>";
-echo "<h1>Search Results</h1>";
-if($searchTitle !=''){
-    echo "You searched in Title for: <strong>$searchTitle</strong><br>";
-    echo "Number of records found: <strong>" . $results->num_rows . "</strong><br><br>";
-
-}if($searchAuthor !=''){
-    echo "You searched in Author for: <strong>$searchAuthor</strong><br>";
-    echo "Number of records found: <strong>" . $results->num_rows . "</strong><br><br>";
-
-}if($searchDOI !=''){
-    echo "You searched in DOI for: <strong>$searchDOI</strong><br>";
-    echo "Number of records found: <strong>" . $results->num_rows . "</strong><br><br>";
-
-}
-
-echo "</div>";
-
 ?>
-</body>
-<!--display results-->
-    <div id="container">
-        <?php
-            while($curentrow = mysqli_fetch_assoc($results)) {
-                echo "<div class='fields'><strong>title:</strong> ";
-                echo $curentrow['title'] . "<br>";
-                echo "<strong>Author: </strong>" . $curentrow['authors'] . "<br>";
-                echo "<strong>Category: </strong>" . $curentrow['categories'] . "<br>";
-                echo "<strong>DOI: </strong>" . $curentrow['doi'] . "<br><br>";
-            }
 
-
-        ?>
+<div className="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">
+    <div class="mt-32 py-8 bg-white">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center">
+                <form action="results.php" method="GET" class="flex flex-row items-center space-x-4">
+                    <input name="search_title" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search paper topics" />
+                    <input type="hidden" name="author" value="" placeholder="Author">
+                    <input type="hidden" name="doi" value="" placeholder="Search by doi">
+                    <input type="hidden" name="categories" value="ALL" placeholder="Search by doi">
+                    <button style="background-color: #2D1F63;" class="rounded-full p-4 shadow-sm border-none focus:outline-none">
+                        <img src="assets/search.svg" class="w-8" />
+                    </button>
+                </form>
+            </div>
+            <div class="mt-10 w-full border border-gray-200 rounded-2xl shadow-sm p-5">
+                <h5 class="text-xl font-semibold">"<?php echo $searchTitle; ?>"</h5>
+                <p class="mt-2 text-md text-gray-500">We found <?php echo $results->num_rows; ?> matches.</p>
+                <div class="mt-5 space-y-6">
+                  <?php
+                    $counter = 1;
+                    while($row = mysqli_fetch_assoc($results)) {
+                  ?>
+                    <div class="flex flex-row items-start space-x-4">
+                      <span class="text-xl font-medium">[<?php echo $counter; ?>]</span>
+                      <div class="">
+                        <div class="flex flex-row items-center space-x-3 flex-wrap">
+                          <h5 class="text-lg font-medium"><?php echo $row['title']; ?></h5>
+                          <div class="flex flex-row items-center justify-center flex-wrap">
+                            <span class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100"><?php echo $row['categories']; ?></span>
+                          </div>
+                        </div>
+                        <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
+                        <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
+                        <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $row['id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
+                      </div>
+                    </div>
+                  <?php
+                    $counter++;
+                    }
+                  ?>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+</body>
 </html>
+
