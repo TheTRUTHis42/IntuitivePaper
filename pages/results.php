@@ -80,21 +80,21 @@ if(!$results){
             <div class="text-center">
                 <form action="results.php" method="GET" class="space-y-3">
                     <div class="mt-8 flex flex-row items-center space-x-4">
-                        <input name="search_title" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search paper topics" />
                         <input type="hidden" name="author" value="" placeholder="Author">
                         <input type="hidden" name="doi" value="" placeholder="Search by doi">
                         <input type="hidden" name="categories" value="ALL" placeholder="Search by doi">
+                        <input id="searchInput" name="search_title" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search paper topics" />
                         <button style="background-color: #2D1F63;" class="rounded-full p-4 shadow-sm border-none focus:outline-none">
                             <img src="assets/search.svg" class="w-8" />
                         </button>
                     </div>
                     <div class="max-w-xs mx-auto">
                         <label for="location" class="mr-1 text-sm font-medium leading-6 text-gray-500">Filter by</label>
-                        <select id="location" name="location" style="width: 125px" class="text-sm mt-1 mx-auto w-full rounded-full border-0 py-1 pl-2 pr-5 text-gray-900 ring-1 ring-inset ring-gray-200 sm:text-sm sm:leading-6">
-                            <option selected>Title</option>
-                            <option>Author</option>
-                            <option>DOI</option>
-                            <option>Category</option>
+                        <select id="searchFilter" name="location" style="width: 125px" class="text-sm mt-1 mx-auto w-full rounded-full border-0 py-1 pl-2 pr-5 text-gray-900 ring-1 ring-inset ring-gray-200 sm:text-sm sm:leading-6">
+                            <option value="search_title" selected>Title</option>
+                            <option value="author">Author</option>
+                            <option value="doi">DOI</option>
+                            <option value="category">Category</option>
                         </select>
                         </div>
                     </div>
@@ -117,8 +117,8 @@ if(!$results){
                             <span class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100"><?php echo $row['categories']; ?></span>
                           </div>
                         </div>
-                        <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
-                        <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
+                        <p class="mt-1 text-md text-gray-700"><?php echo $row['abstract']; ?></p>
+                        <p class="mt-1 text-sm italic text-gray-400"><?php echo $row['authors']; ?> | <?php echo $row['doi']; ?></p>
                         <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $row['id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                       </div>
                     </div>
@@ -132,5 +132,12 @@ if(!$results){
     </div>
 </div>
 </body>
+<script>
+    document.getElementById('searchFilter').addEventListener('change', function() {
+        var searchInput = document.getElementById('searchInput');
+        var selectedFilter = this.value;
+        searchInput.name = selectedFilter;
+    });
+</script>
 </html>
 
