@@ -128,7 +128,7 @@ if (!$results) {
                                     echo '<div class="flex flex-row items-center justify-center flex-wrap">';
                                         $categories = explode(', ', $row['categories']);
                                         foreach ($categories as $category) {
-                                            echo '<a href="search.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
+                                            echo '<a href="results.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
                                         }?>
                                     </div>
                                     <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in Margin</button>
