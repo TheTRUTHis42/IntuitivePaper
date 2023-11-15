@@ -66,7 +66,7 @@ $results = $mysql->query($sql);
                             <option value="search_title" selected>Title</option>
                             <option value="author">Author</option>
                             <option value="doi">DOI</option>
-                            <option value="category">Category</option>
+                            <option value="categories">Category</option>
                         </select>
                         </div>
                     </div>
