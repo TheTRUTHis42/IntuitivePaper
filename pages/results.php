@@ -24,21 +24,29 @@ if($mysql->connect_errno){
 $sql = "SELECT * FROM xie_import_6000 WHERE 1 = 1 ";
 
 //get search results
+$all = $_REQUEST['all'];
 $searchTitle = $_REQUEST['search_title'];
 $searchAuthor = $_REQUEST['author'];
 $searchDOI = $_REQUEST['doi'];
 $searchCategory = $_REQUEST['categories'];
+$filterType = $_REQUEST['filter_type'];
 
 //filters
-if($searchTitle != ''){
-    $sql.= "AND title LIKE '%". $searchTitle. "%'";
-}if($searchAuthor!= ''){
-    $sql.= "AND authors LIKE '". $searchAuthor. "%'";
-}if($searchDOI!= ''){
-    $sql.= "AND doi = ". $searchDOI;
-}if($searchCategory != "ALL"){
-    $sql.= "AND categories = '". $searchCategory. "'";
+if($all != ''){
+    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR categories LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
+} else {
+    if($searchTitle != ''){
+        $sql.= "AND title LIKE '%". $searchTitle. "%'";
+    }if($searchAuthor!= ''){
+        $sql.= "AND authors LIKE '". $searchAuthor. "%'";
+    }if($searchDOI!= ''){
+        $sql.= "AND doi = ". $searchDOI;
+    }if($searchCategory != "ALL"){
+        $sql.= "AND categories = '". $searchCategory. "'";
+    }
 }
+
+print_r($sql);
 //store results in a appropriate variables variable
 $results = $mysql->query($sql);
 
@@ -83,15 +91,16 @@ if(!$results){
                         <input type="hidden" name="author" value="" placeholder="Author">
                         <input type="hidden" name="doi" value="" placeholder="Search by doi">
                         <input type="hidden" name="categories" value="ALL" placeholder="Search by doi">
-                        <input id="searchInput" name="search_title" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search paper topics" />
+                        <input id="searchInput" name="all" class="w-full shadow-sm py-4 px-7 rounded-full border border-gray-200 focus:outline-none text-lg bg-white" type="text" placeholder="Search paper topics" />
                         <button style="background-color: #2D1F63;" class="rounded-full p-4 shadow-sm border-none focus:outline-none">
                             <img src="assets/search.svg" class="w-8" />
                         </button>
                     </div>
                     <div class="max-w-xs mx-auto">
                         <label for="location" class="mr-1 text-sm font-medium leading-6 text-gray-500">Filter by</label>
-                        <select id="searchFilter" name="location" style="width: 125px" class="text-sm mt-1 mx-auto w-full rounded-full border-0 py-1 pl-2 pr-5 text-gray-900 ring-1 ring-inset ring-gray-200 sm:text-sm sm:leading-6">
-                            <option value="search_title" selected>Title</option>
+                        <select id="searchFilter" name="filter_type" style="width: 125px" class="text-sm mt-1 mx-auto w-full rounded-full border-0 py-1 pl-2 pr-5 text-gray-900 ring-1 ring-inset ring-gray-200 sm:text-sm sm:leading-6">
+                            <option value="ALL" selected>ALL</option>
+                            <option value="search_title">Title</option>
                             <option value="author">Author</option>
                             <option value="doi">DOI</option>
                             <option value="categories">Category</option>
@@ -101,8 +110,9 @@ if(!$results){
                 </form>
             </div>
             <div class="max-w-2xl mx-auto mt-10 w-full border border-gray-200 rounded-2xl shadow-sm p-5">
-                <h5 class="text-xl font-semibold">"<?php echo $searchTitle; ?>"</h5>
+                <h5 class="text-xl font-semibold">"<?php echo isset($all) ? $all : (isset($searchTitle) ? $searchTitle : (isset($searchAuthor) ? $searchAuthor : (isset($searchDOI) ? $searchDOI : $searchCategory))); ?>"</h5>
                 <p class="mt-2 text-md text-gray-500">We found <?php echo $results->num_rows; ?> matches.</p>
+                <p class="mt-1 text-sm italic text-gray-400">Filtering by <?php echo $filterType; ?> </p>
                 <div class="mt-5 space-y-6">
                   <?php
                     $counter = 1;
@@ -122,7 +132,7 @@ if(!$results){
                             $categories = explode(', ', $row['categories']);
                             foreach ($categories as $category) {
                             ?>
-                                <a href="results.php?search_title=&author=&doi=&categories=<?php echo urlencode($category); ?>" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">
+                                <a href="results.php?filter_type=category&search_title=&author=&doi=&categories=<?php echo urlencode($category); ?>" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">
                                     <?php echo htmlspecialchars($category); ?>
                                 </a>
                             <?php
