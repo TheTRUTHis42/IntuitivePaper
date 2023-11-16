@@ -1,6 +1,6 @@
 <html lang = "en">
 <head>
-    <title>ARX-IF Database Search Results</title>
+    <title>ArXiv Database Search</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
@@ -28,7 +28,7 @@ $all = $_REQUEST['all'];
 $searchTitle = $_REQUEST['search_title'];
 $searchAuthor = $_REQUEST['author'];
 $searchDOI = $_REQUEST['doi'];
-$searchCategory = $_REQUEST['categories'];
+$searchCategories = $_REQUEST['categories'];
 $filterType = $_REQUEST['filter_type'];
 
 //filters
@@ -40,9 +40,9 @@ if($all != ''){
     }if($searchAuthor!= ''){
         $sql.= "AND authors LIKE '". $searchAuthor. "%'";
     }if($searchDOI!= ''){
-        $sql.= "AND doi = ". $searchDOI;
-    }if($searchCategory != "ALL"){
-        $sql.= "AND categories = '". $searchCategory. "'";
+        $sql.= "AND doi LIKE '%". $searchDOI. "%'";
+    }if($searchCategories != "ALL"){
+        $sql.= "AND categories LIKE '%". $searchCategories. "%'";
     }
 }
 
@@ -110,7 +110,7 @@ if(!$results){
                 </form>
             </div>
             <div class="max-w-2xl mx-auto mt-10 w-full border border-gray-200 rounded-2xl shadow-sm p-5">
-                <h5 class="text-xl font-semibold">"<?php echo isset($all) ? $all : (isset($searchTitle) ? $searchTitle : (isset($searchAuthor) ? $searchAuthor : (isset($searchDOI) ? $searchDOI : $searchCategory))); ?>"</h5>
+                <h5 class="text-xl font-semibold">"<?php echo !empty($all) ? $all : (!empty($searchTitle) ? $searchTitle : (!empty($searchAuthor) ? $searchAuthor : (!empty($searchDOI) ? $searchDOI : $searchCategories))); ?>"</h5>
                 <p class="mt-2 text-md text-gray-500">We found <?php echo $results->num_rows; ?> matches.</p>
                 <p class="mt-1 text-sm italic text-gray-400">Filtering by <?php echo $filterType; ?> </p>
                 <div class="mt-5 space-y-6">
@@ -161,6 +161,12 @@ if(!$results){
         var selectedFilter = this.value;
         searchInput.name = selectedFilter;
     });
+
+    window.onload = function() {
+        var filterType = "<?php echo $filterType; ?>";
+        var searchFilter = document.getElementById('searchFilter');
+        searchFilter.value = filterType;
+    };
 </script>
 </html>
 
