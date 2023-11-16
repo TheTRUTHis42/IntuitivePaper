@@ -112,10 +112,23 @@ if(!$results){
                       <span class="text-xl font-medium">[<?php echo $counter; ?>]</span>
                       <div class="">
                         <div class="flex flex-row items-center space-x-3 flex-wrap">
-                          <h5 class="text-lg font-medium"><?php echo $row['title']; ?></h5>
+                          <h5 class="text-lg font-medium">
+                            <a href="details.php?id=<?php echo urlencode($row['id']); ?>" class="text-blue-900 hover:text-blue-500">
+                                <?php echo htmlspecialchars($row['title']); ?>
+                            </a>
+                        </h5>
                           <div class="flex flex-row items-center justify-center flex-wrap">
-                            <span class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100"><?php echo $row['categories']; ?></span>
-                          </div>
+                            <?php
+                            $categories = explode(', ', $row['categories']);
+                            foreach ($categories as $category) {
+                            ?>
+                                <a href="results.php?search_title=&author=&doi=&categories=<?php echo urlencode($category); ?>" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">
+                                    <?php echo htmlspecialchars($category); ?>
+                                </a>
+                            <?php
+                            }
+                            ?>
+                        </div>
                         </div>
                         <p class="mt-1 text-md text-gray-700"><?php echo $row['abstract']; ?></p>
                         <p class="mt-1 text-sm italic text-gray-400"><?php echo $row['authors']; ?> | <?php echo $row['doi']; ?></p>
