@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session at the beginning of the script
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,16 +84,25 @@ if (!$results) {
                 <img src="assets/logo.svg" class="w-32" />
             </a>
             <div class="flex flex-row items-center space-x-2">
-                <a href="login.php">
-                    <button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>
-                </a>
-                <a href="register.php">
-                    <button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>
-                </a>
+                <?php
+                if(isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
+                    // Display 'My Account' button
+                    echo '<a href="my_account.php">';
+                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
+                    echo '</a>';
+                } else {
+                    // Display 'Login' and 'Register' buttons
+                    echo '<a href="login.php">';
+                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>';
+                    echo '</a>';
+                    echo '<a href="register.php">';
+                    echo '<button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>';
+                    echo '</a>';
+                }
+                ?>
             </div>
         </div>
     </div>
-
         <div class="mt-32 py-8 bg-white">
         <div class="max-w-2xl mx-auto">
             <div class="text-center">
@@ -136,7 +149,7 @@ if (!$results) {
                                             echo '<a href="results.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
                                         }?>
                                     </div>
-                                    <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in the Margin</button>
+                                    <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in Margin</button>
                                 </div>
                                 <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
                                 <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
