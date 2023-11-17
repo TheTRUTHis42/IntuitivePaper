@@ -136,7 +136,7 @@ if (!$results) {
                                             echo '<a href="results.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
                                         }?>
                                     </div>
-                                    <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in Margin</button>
+                                    <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in the Margin</button>
                                 </div>
                                 <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
                                 <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
