@@ -1,67 +1,69 @@
-<html lang = "en">
-<head>
-    <title>Admin Sign In</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
 <?php
+//require_once "session.php";
+session_start();
 $mysql = new mysqli(
-"webdev.iyaserver.com",
-"louisxie_user1",
-"sampleimport",
-"louisxie_IPImportTest"
+    "webdev.iyaserver.com",
+    "louisxie_user1",
+    "sampleimport",
+    "louisxie_IPImportTest"
 );
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 //connection error test
 if($mysql->connect_errno){
-echo "Database Connection Error:". $mysql->connect_errno;
-exit();
+    echo "Database Connection Error:". $mysql->connect_errno;
+    exit();
 }
-require_once "session.php";
 
 $error = '';
-if($_SERVER["REQUEST_METHOD"] == POST && isset($_POST['submit'])){
-$username = trim($_POST['username']);
-$pass = trim($_POST['password']);
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])){
+    $username = trim($_POST['username']);
+    $pass = trim($_POST['password']);
 
 // validate username
-if(empty($username)){
-$error.= '<p>Please enter username.</p>';
-}
-// validate email
-if(empty($pass)){
-$error.= '<p>Please enter password.</p>';
-}
-if(empty($error)) {
-    if ($sql = $mysql->prepare("SELECT * FROM users WHERE username = ?")) {
-        $sql->bind_param('s', $username);
-        $results = $sql->execute();
-        if (!$results) {
-            echo "<hr>SQL Error: " . $mysql->error . "<br>";
-            echo "Output SQL: " . $sql . "</hr>";
-            exit();
-        }
-        $currentrow = $sql->fetch();
-        if ($currentrow){
-            if (password_verify($pass, $currentrow['password'])) {
-//                $_SESSION["userid"] = $currentrow;
-                $_SESSION["username"] = $currentrow['username'];
-
-                // direct user to results page or whatever designated page we choose
-                header("location: results.php");
-                exit();
-            } else {
-                $error .= "<p>The password is not valid</p>";
-            }
-        } else {
-            $error .= "<p>Your account does not exist </p>";
-        }
-        $sql->close();
+    if(empty($username)){
+        $error.= '<p>Please enter username.</p>';
     }
-}
+// validate email
+    if(empty($pass)){
+        $error.= '<p>Please enter password.</p>';
+    }
+    if(empty($error)) {
+        if ($sql = $mysql->prepare("SELECT * FROM users WHERE username = ?")) {
+            $sql->bind_param('s', $username);
+            $results = $sql->execute();
+            if (!$results) {
+                echo "<hr>SQL Error: " . $mysql->error . "<br>";
+                echo "Output SQL: " . $sql . "</hr>";
+                exit();
+            }
+            $currentrow = $sql->fetch();
+            if ($currentrow){
+                if (password_verify($pass, $currentrow['password'])) {
+//                $_SESSION["userid"] = $currentrow;
+                    // logs the username
+                    $_SESSION["username"] = $currentrow['username'];
+
+                    // direct user to results page or whatever designated page we choose
+                    header("location: ../pages/details.php");
+                    exit();
+                } else {
+                    $error .= "<p>The password is not valid</p>";
+                }
+            } else {
+                $error .= "<p>Your account does not exist </p>";
+            }
+            $sql->close();
+        }
+    }
 
 }
 ?>
+<html lang = "en">
+<head>
+    <title>Admin Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
 <body>
 
 <div className="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">

@@ -1,10 +1,5 @@
-<html lang = "en">
-<head>
-    <title>Admin Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
 <?php
-include_once "session.php";
+//include_once "session.php";
 session_start();
 
 //database connection
@@ -21,15 +16,23 @@ if ($mysql->connect_errno) {
     echo "Database Connection Error:" . $mysql->connect_errno;
     exit();
 }
+echo "Debug: Script is executed.";
 
+$pass = '';
+$confirmPass = '';
 $error = '';
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $fName = trim($_POST['fname']);
     $lName = trim($_POST['lname']);
     $email = trim($_POST['email']);
     $userName = trim($_POST['username']);
     $pass = trim($_POST['password']);
     $confirmPass = trim($_POST['confirmPassword']);
+
+
+
+// Debug: Print values before the condition
+    echo "Debug: Before condition - confirmPass = " . $confirmPass . ", pass = " . $pass;
 
     if ($sql = $mysql->prepare("SELECT * FROM users WHERE email = ?")) {
         $error = '';
@@ -39,33 +42,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $sql->store_result();
         if ($sql->num_rows > 0) {
             $error .= "<p> The email is already registered</p>";
-        } else {
+        }
+        else {
             // validate password
             if (strlen($pass) < 8) {
                 $error .= "<p> Password must be at least 8 chars long</p>";
-            } elseif ($confirmPass != $pass && empty($pass)) {
+                // Debug: Print values inside the condition
+                echo "Debug: Inside condition - confirmPass = " . $confirmPass . ", pass = " . $pass;
+            } elseif ($confirmPass !== $pass) {
                 $error .= "<p> Passwords must match</p>";
+// Debug: Print values inside the condition
+                echo "Debug: Inside condition - confirmPass = " . $confirmPass . ", pass = " . $pass;
             }
         }
-        if (empty($error)) {
-            $userSQL = $mysql->prepare("INSERT INTO users (`username`, `fname`, `lname`, `email`) VALUES(?, ?, ?, ?)");
-            $userSQL->bind_param('ssss', $userName, $fName, $lName, $email);
-            $results = $userSQL->execute();
-            if (!$results) {
-                echo "Something went wrong: " . $userSQL->error;
-            } else {
+        if ($error == '') {
+//            $userSQL = $mysql->prepare("INSERT INTO users (`username`, `fname`, `lname`, `email`) VALUES(?, ?, ?, ?)");
+//            $userSQL->bind_param('ssss', $userName, $fName, $lName, $email);
+//            $results = $userSQL->execute();
+
+// Debug: Print values after the condition
+            echo "Debug: After condition - confirmPass = " . $confirmPass . ", pass = " . $pass;
+
+//            if (!$results) {
+//                echo "Something went wrong: " . $userSQL->error;
+//            } else {
                 echo "Registration was successful";
-            }
+//            }
         }
+
+
         $sql->close();
     }
 }
 
 ?>
-?>
+
+<html lang = "en">
+<head>
+    <title>Admin Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
 <body>
 
-<div className="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">
+<div class="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">
 <div class="absolute top-0 w-full py-4 px-3" style="background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 100%);">
         <div class="max-w-6xl mx-auto flex flex-row items-center justify-between">
             <a href="../pages/search.php">
@@ -84,10 +104,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
     <div class="mt-32 py-8 bg-white">
         <div class="max-w-lg mx-auto">
-            <form action="../VO-suggestion/administration_page.php" method="POST" class="border border-gray-200 rounded-2xl shadow-sm p-8 space-y-4">
+            <form action="" method="POST" class="border border-gray-200 rounded-2xl shadow-sm p-8 space-y-4">
               <h1 class="text-2xl font-semibold"> Admin Registration</h1>
                 <?php
                 echo $error;
+
                 ?>
               <div class="space-y-2">
                 <label class="block">Email</label>
@@ -121,6 +142,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         </div>
     </div>
 </div>
+<script>
+    // JavaScript to prevent form submission if there are errors
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Check if there are errors
+        if ('<?php echo strlen($error); ?>' !== '0') {
+            // Prevent the form from submitting
+            event.preventDefault();
+        }
+    });
+</script>
 </body>
 </html>
 
