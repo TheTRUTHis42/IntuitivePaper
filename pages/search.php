@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session at the beginning of the script
+?>
+
 <html lang = "en">
 <head>
     <title>ArXiv Database Search</title>
@@ -28,16 +32,26 @@ $results = $mysql->query($sql);
 <div class="w-full">
     <div class="absolute top-0 w-full py-4 px-3" style="background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 100%);">
         <div class="max-w-6xl mx-auto flex flex-row items-center justify-between">
-            <a href="../pages/search.php">
+            <a href="search.php">
                 <img src="assets/logo.svg" class="w-32" />
             </a>
             <div class="flex flex-row items-center space-x-2">
-                <a href="../pages/login.php">
-                    <button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>
-                </a>
-                <a href="register.php">
-                    <button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>
-                </a>
+                <?php
+                if(isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
+                    // Display 'My Account' button
+                    echo '<a href="my_account.php">';
+                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
+                    echo '</a>';
+                } else {
+                    // Display 'Login' and 'Register' buttons
+                    echo '<a href="login.php">';
+                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>';
+                    echo '</a>';
+                    echo '<a href="register.php">';
+                    echo '<button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>';
+                    echo '</a>';
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -50,7 +64,7 @@ $results = $mysql->query($sql);
             <div class="text-center">
                 <h1 class="text-5xl font-extrabold" style="color: #2D1F63;">Intuitive Paper</h1>
                 <p class="mt-3 text-lg font-medium text-gray-500">Find the best research on ArXiv</p>
-                <form id="searchForm" action="../pages/results.php" method="GET" class="space-y-3">
+                <form id="searchForm" action="results.php" method="GET" class="space-y-3">
                     <div class="mt-8 flex flex-row items-center space-x-4">
                         <input type="hidden" name="author" value="" placeholder="Author">
                         <input type="hidden" name="doi" value="" placeholder="Search by doi">
@@ -107,4 +121,3 @@ $results = $mysql->query($sql);
     });
 </script>
 </html>
-

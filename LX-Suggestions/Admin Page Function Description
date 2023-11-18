@@ -1,0 +1,20 @@
+Admin pages 
+	- When logged in, the search/result page will check if the user has a seclv of 5, if so, will show "admin" option instead of "my account".
+	- General functions: 
+		- After admin login, will see "admin" option instead of "my account".
+		- Click on "admin" will redirect to admin_page.php
+		- left-hand side will show 3 tabs, "Accounts", "Utilities", "Charts"
+		- Click on "Accounts" tab will show the following information on the right-hand side: 
+			- A section called "Account management" that shows all the user name, password, and account creation date in a table. 
+			- A button "edit" on the top of "Account management" section, which, when clicked upon will show a "--" button on the end of each row. 
+			- When clicked on "--" button, a popup alert will show "Are you sure you want to delete this user?" and two options: Yes, No. 
+			- When clicked upon No, the alert will be dismissed and no changes to the database will be posted. 
+			- When clicked upon Yes, the alert will be dismissed and the selected row will be delete from the database. 
+		- Click on "Utilities" will show the following information on the right-hand side: 
+			- A section called "Data management" that shows all the paper id, title, and sub category in a table. 
+			- On top of the table, there will be a search field, titled "Search for Entry". On the right side of the search bar there is a drop-down list called "Fields", which includes "ALL, Title, Id, sub category". This will change the field of search when a key word is entered in the search bar. On the right side of drop-down, there is a button "search". When clicked on 'search', the table below will only show the matched entries. 
+			- A button "edit" on the top of "data management" section, which, when clicked upon will show a "--" button on the end of each row. 
+			- When clicked on "--" button, a popup alert will show "Are you sure you want to delete this entry?" and two options: Yes, No. 
+			- When clicked upon No, the alert will be dismissed and no changes to the database will be posted. 
+			- When clicked upon Yes, the alert will be dismissed and the selected row will be delete from the database. 
+		- Click on "Charts" tab will show the graph of recent site traffic.
