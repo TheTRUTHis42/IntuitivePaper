@@ -28,11 +28,11 @@ $results = $mysql->query($sql);
 <div class="w-full">
     <div class="absolute top-0 w-full py-4 px-3" style="background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 100%);">
         <div class="max-w-6xl mx-auto flex flex-row items-center justify-between">
-            <a href="search.php">
+            <a href="../pages/search.php">
                 <img src="assets/logo.svg" class="w-32" />
             </a>
             <div class="flex flex-row items-center space-x-2">
-                <a href="login.php">
+                <a href="../pages/login.php">
                     <button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>
                 </a>
                 <a href="register.php">
@@ -50,7 +50,7 @@ $results = $mysql->query($sql);
             <div class="text-center">
                 <h1 class="text-5xl font-extrabold" style="color: #2D1F63;">Intuitive Paper</h1>
                 <p class="mt-3 text-lg font-medium text-gray-500">Find the best research on ArXiv</p>
-                <form id="searchForm" action="results.php" method="GET" class="space-y-3">
+                <form id="searchForm" action="../pages/results.php" method="GET" class="space-y-3">
                     <div class="mt-8 flex flex-row items-center space-x-4">
                         <input type="hidden" name="author" value="" placeholder="Author">
                         <input type="hidden" name="doi" value="" placeholder="Search by doi">
