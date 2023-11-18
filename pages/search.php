@@ -27,6 +27,7 @@ $sql = "SELECT categories FROM xie_import_6000 ";
 
 //save the query into a variable
 $results = $mysql->query($sql);
+echo $_SESSION['seclv'];
 ?>
 
 <div class="w-full">
@@ -37,13 +38,20 @@ $results = $mysql->query($sql);
             </a>
             <div class="flex flex-row items-center space-x-2">
                 <?php
-                if(isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
-                    // Display 'My Account' button
-                    echo '<a href="my_account.php">';
-                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
-                    echo '</a>';
+                if (isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
+                    if (isset($_SESSION['seclv']) && $_SESSION['seclv'] == 5) {
+                        // Admin user
+                        echo '<a href="admin_page.php">';
+                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button>';
+                        echo '</a>';
+                    } else {
+                        // Regular user
+                        echo '<a href="my_account.php">';
+                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
+                        echo '</a>';
+                    }
                 } else {
-                    // Display 'Login' and 'Register' buttons
+                    // Not logged in
                     echo '<a href="login.php">';
                     echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>';
                     echo '</a>';
@@ -55,8 +63,6 @@ $results = $mysql->query($sql);
             </div>
         </div>
     </div>
-
-
 
     <img src="assets/background.svg" class="absolute left-0 top-0 w-full" style="z-index: -1; min-height: 300px;" />
     <div class="mt-52 py-8 px-4 h-full" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);">
