@@ -16,11 +16,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare and execute the query
-    // Include is_email_verified in your SELECT statement
-    $stmt = $mysqli->prepare("SELECT password, is_email_verified FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    if (!$stmt = $mysql->prepare($insertSql)) {
+        echo "Prepare failed: (" . $mysql->errno . ") " . $mysql->error;
+    } else {
+        $stmt->bind_param("ii", $paperId, $userId);
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        $stmt->close();
+    }
+
+    // $stmt = $mysqli->prepare("SELECT password, is_email_verified, seclv, user_id FROM users WHERE username = ?");
+    // $stmt->bind_param("s", $username);
+    // $stmt->execute();
+    // $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
@@ -35,6 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirect to the main page
             $_SESSION['userLoggedIn'] = true;
             $_SESSION['username'] = $username; // Optional: to display or use the username
+            $_SESSION['seclv'] = $row['seclv']; // Store user's security level in session
+            $_SESSION['userId'] = $row['user_id'];
             header("Location: https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/search.php");
             exit();
         } else {
@@ -101,55 +112,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </body>
 </html>
-
-
-
-
-<?php
-session_start();
-
-$login_error = '';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Connect to the database
-    $mysqli = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
-
-    // Check connection
-    if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
-    }
-
-    // Prepare and execute the query
-    $stmt = $mysqli->prepare("SELECT password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            // After checking the username and password
-            if ($row['is_email_verified'] == 0) {
-                // User's email is not verified
-                echo "Your email is not verified. Please check your email.";
-                exit();
-            }
-            // Proceed with login
-            // Redirect to the main page
-            header("Location: https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/search.php");
-            exit();
-        } else {
-            $login_error = "Invalid username or password.";
-        }
-    } else {
-        $login_error = "Invalid username or password.";
-    }
-
-    // Close statement and connection
-    $stmt->close();
-    $mysqli->close();
-}
-?>
