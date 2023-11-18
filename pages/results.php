@@ -51,6 +51,8 @@ $searchDOI = $_REQUEST['doi'];
 $searchCategories = $_REQUEST['categories'];
 $filterType = $_REQUEST['filter_type'];
 
+echo $_SESSION['seclv'];
+
 //filters
 if($all != ''){
     $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR categories LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
@@ -85,13 +87,20 @@ if (!$results) {
             </a>
             <div class="flex flex-row items-center space-x-2">
                 <?php
-                if(isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
-                    // Display 'My Account' button
-                    echo '<a href="my_account.php">';
-                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
-                    echo '</a>';
+                if (isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
+                    if (isset($_SESSION['seclv']) && $_SESSION['seclv'] == 5) {
+                        // Admin user
+                        echo '<a href="admin_page.php">';
+                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button>';
+                        echo '</a>';
+                    } else {
+                        // Regular user
+                        echo '<a href="my_account.php">';
+                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
+                        echo '</a>';
+                    }
                 } else {
-                    // Display 'Login' and 'Register' buttons
+                    // Not logged in
                     echo '<a href="login.php">';
                     echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>';
                     echo '</a>';
