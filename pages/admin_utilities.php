@@ -65,52 +65,55 @@ $results = $mysql->query($query);
 <html lang="en">
 <head>
     <title>Data Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
-<h2>Data Management</h2>
-<form id="searchForm" method="GET" action="admin_utilities.php">
-    <input type="text" name="search" id="searchField" placeholder="Search for Entry">
-    <select name="searchType" id="searchType">
-        <option value="ALL">ALL</option>
-        <option value="title">Title</option>
-        <option value="id">Id</option>
-        <option value="categories">Sub Category</option>
-    </select>
-    <button type="submit" id="searchButton">Search</button>
-</form>
+<div class="w-full ">
+    <h2 class="text-2xl font-bold mb-4">Data Management</h2>
+    <form id="searchForm" method="GET" action="admin_utilities.php" class="mt-4">
+        <input type="text" name="search" id="searchField" placeholder="Search for Entry" class="border px-4 py-2">
+        <select name="searchType" id="searchType" class="border px-4 py-2">
+            <option value="ALL">ALL</option>
+            <option value="title">Title</option>
+            <option value="id">Id</option>
+            <option value="categories">Sub Category</option>
+        </select>
+        <button type="submit" id="searchButton" class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Search</button>
+    </form>
 
-<form id="dataManagementForm" method="POST" action="admin_utilities.php">
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-    <input type="hidden" name="action" id="actionInput">
-    <input type="hidden" name="paperId" id="paperIdInput">
-    <input type="hidden" name="title" id="titleInput">
-    <input type="hidden" name="categories" id="categoriesInput">
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Paper ID</th>
-                <th>Title</th>
-                <th>Sub Category</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $results->fetch_assoc()): ?>
-                <tr id="entry-<?php echo $row['id']; ?>">
-                    <td><?php echo htmlspecialchars($row['id']); ?></td>
-                    <td><?php echo htmlspecialchars($row['title']); ?></td>
-                    <td><?php echo htmlspecialchars($row['categories']); ?></td>
-                    <td class="action-cell">
-                        <button type="button" class="deleteEntry" data-entryid="<?php echo $row['id']; ?>">--</button>
-                        <button type="button" class="editEntry" data-entryid="<?php echo $row['id']; ?>">/</button>
-                    </td>
+    <form id="dataManagementForm" method="POST" action="admin_utilities.php" class="mt-4">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <input type="hidden" name="action" id="actionInput">
+        <input type="hidden" name="paperId" id="paperIdInput">
+        <input type="hidden" name="title" id="titleInput">
+        <input type="hidden" name="categories" id="categoriesInput">
+        <table id="dataTable" class="w-full border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2">Paper ID</th>
+                    <th class="px-4 py-2">Title</th>
+                    <th class="px-4 py-2">Sub Category</th>
+                    <th class="px-4 py-2">Action</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-</form>
+            </thead>
+            <tbody class="text-gray-700">
+                <?php while ($row = $results->fetch_assoc()): ?>
+                    <tr id="entry-<?php echo $row['id']; ?>" class="border px-4 py-2">
+                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['title']); ?></td>
+                        <td><?php echo htmlspecialchars($row['categories']); ?></td>
+                        <td class="action-cell">
+                            <button type="button" class="deleteEntry" data-entryid="<?php echo $row['id']; ?>">--</button>
+                            <button type="button" class="editEntry" data-entryid="<?php echo $row['id']; ?>">/</button>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </form>
+</div>
 
 <script>
     $(document).on('click', '.deleteEntry', function() {

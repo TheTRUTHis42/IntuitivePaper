@@ -136,7 +136,21 @@ if (!$results) {
                 </form>
             </div>
             <div class="max-w-2xl mx-auto mt-10 w-full border border-gray-200 rounded-2xl shadow-sm p-5">
-                <h5 class="text-xl font-semibold">"<?php echo htmlspecialchars($searchTitle); ?>"</h5>
+                <h5 class="text-xl font-semibold">
+                    "<?php
+                    if (!empty($all)) {
+                        echo $all;
+                    } elseif (!empty($searchTitle)) {
+                        echo $searchTitle;
+                    } elseif (!empty($searchAuthor)) {
+                        echo $searchAuthor;
+                    } elseif (!empty($searchDOI)) {
+                        echo $searchDOI;
+                    } elseif (!empty($searchCategories)) {
+                        echo $searchCategories;
+                    }
+                    ?>"
+                </h5>
                 <p class="mt-2 text-md text-gray-500">We found <?php echo $results->num_rows; ?> matches.</p>
                 <div class="mt-5 space-y-6">
                     <?php

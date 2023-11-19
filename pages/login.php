@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $username;
             $_SESSION['seclv'] = $row['seclv'];
             $_SESSION['userId'] = $row['user_id']; // Storing user_id in session
-            header("Location: https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/search.php");
+            header("Location: search.php");
             exit();
         } else {
             $login_error = "Invalid username or password.";

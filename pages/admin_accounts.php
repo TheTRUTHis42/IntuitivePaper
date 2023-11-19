@@ -53,37 +53,39 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
 </head>
 <body>
 
-<h2>Account Management</h2>
-<button id="editMode">Edit</button>
-<form id="userActionForm" method="POST" action="admin_accounts.php">
-    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-    <input type="hidden" name="action" id="actionInput">
-    <input type="hidden" name="userId" id="userIdInput">
-    <input type="hidden" name="newUsername" id="newUsernameInput">
-    <input type="hidden" name="newPassword" id="newPasswordInput">
-    <table id="accountsTable">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Password</th>
-                <th>Creation Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($user = $users->fetch_assoc()): ?>
-                <tr id="user-<?php echo $user['user_id']; ?>">
-                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                    <td><?php echo htmlspecialchars($user['password']); ?></td>
-                    <td><?php echo htmlspecialchars($user['creation_date']); ?></td>
-                    <td class="action-cell">
-                        <!-- Action buttons will be dynamically added here by JavaScript -->
-                    </td>
+<div class="w-full">
+    <h2 class="text-2xl font-bold mb-4">Account Management</h2>
+    <button id="editMode" class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Edit</button>
+    <form id="userActionForm" method="POST" action="admin_accounts.php" class="mt-4">
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+        <input type="hidden" name="action" id="actionInput">
+        <input type="hidden" name="userId" id="userIdInput">
+        <input type="hidden" name="newUsername" id="newUsernameInput">
+        <input type="hidden" name="newPassword" id="newPasswordInput">
+        <table id="accountsTable" class="w-full border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2">Username</th>
+                    <th class="px-4 py-2">Password</th>
+                    <th class="px-4 py-2">Creation Date</th>
+                    <th class="px-4 py-2">Action</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-</form>
+            </thead>
+            <tbody>
+                <?php while ($user = $users->fetch_assoc()): ?>
+                    <tr id="user-<?php echo $user['user_id']; ?>" class="text-gray-700">
+                        <td class="border px-4 py-2"><?php echo htmlspecialchars($user['username']); ?></td>
+                        <td class="border px-4 py-2"><?php echo htmlspecialchars($user['password']); ?></td>
+                        <td class="border px-4 py-2"><?php echo htmlspecialchars($user['creation_date']); ?></td>
+                        <td class="border px-4 py-2 action-cell">
+                            <!-- Action buttons will be dynamically added here by JavaScript -->
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </form>
+</div>
 
 <script>
     // JavaScript functionality for edit and delete operations
