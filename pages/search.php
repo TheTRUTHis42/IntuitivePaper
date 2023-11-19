@@ -41,23 +41,17 @@ echo $_SESSION['seclv'];
                 if (isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
                     if (isset($_SESSION['seclv']) && $_SESSION['seclv'] == 5) {
                         // Admin user
-                        echo '<a href="admin_page.php">';
-                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button>';
-                        echo '</a>';
+                        echo '<a href="admin_page.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button></a>';
                     } else {
                         // Regular user
-                        echo '<a href="my_account.php">';
-                        echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button>';
-                        echo '</a>';
+                        echo '<a href="my_account.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
                     }
+                    // Logout button for logged-in users
+                    echo '<a href="logout.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Logout</button></a>';
                 } else {
                     // Not logged in
-                    echo '<a href="login.php">';
-                    echo '<button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>';
-                    echo '</a>';
-                    echo '<a href="register.php">';
-                    echo '<button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>';
-                    echo '</a>';
+                    echo '<a href="login.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button></a>';
+                    echo '<a href="register.php"><button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button></a>';
                 }
                 ?>
             </div>
