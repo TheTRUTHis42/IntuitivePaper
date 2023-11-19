@@ -15,21 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Connection failed: " . $mysqli->connect_error);
     }
 
-    // Prepare and execute the query
-    if (!$stmt = $mysql->prepare($insertSql)) {
-        echo "Prepare failed: (" . $mysql->errno . ") " . $mysql->error;
-    } else {
-        $stmt->bind_param("ii", $paperId, $userId);
-        if (!$stmt->execute()) {
-            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-        }
-        $stmt->close();
-    }
-
-    // $stmt = $mysqli->prepare("SELECT password, is_email_verified, seclv, user_id FROM users WHERE username = ?");
-    // $stmt->bind_param("s", $username);
-    // $stmt->execute();
-    // $result = $stmt->get_result();
+    // Prepare and execute the query to retrieve user data
+    $stmt = $mysqli->prepare("SELECT password, is_email_verified, seclv, user_id FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
@@ -41,11 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
             // Email is verified, proceed with login
-            // Redirect to the main page
             $_SESSION['userLoggedIn'] = true;
-            $_SESSION['username'] = $username; // Optional: to display or use the username
-            $_SESSION['seclv'] = $row['seclv']; // Store user's security level in session
-            $_SESSION['userId'] = $row['user_id'];
+            $_SESSION['username'] = $username;
+            $_SESSION['seclv'] = $row['seclv'];
+            $_SESSION['userId'] = $row['user_id']; // Storing user_id in session
             header("Location: https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/search.php");
             exit();
         } else {
