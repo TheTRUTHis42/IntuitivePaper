@@ -9,17 +9,20 @@ session_start(); // Start the session at the beginning of the script
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .floating-window {
-            position: fixed;
+            position: fixed; /* Keeps the window in place relative to the viewport */
             right: 20px;
             top: 20px;
-            width: 300px; /* Adjust width as needed */
-            max-height: 80%; /* Adjust maximum height as needed */
+            width: 300px; /* Initial width */
+            max-height: 80%; /* Maximum height */
+            min-width: 150px; /* Minimum width */
+            min-height: 150px; /* Minimum height */
             background-color: white;
             border: 1px solid #ddd;
             z-index: 1000;
-            overflow-y: auto; /* Enable vertical scrolling */
+            overflow: auto; 
             padding: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: Adds shadow for better visibility */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            resize: both; /* Enables resizing */
         }
     </style>
 </head>
@@ -170,7 +173,6 @@ if (!$results) {
     </div>
 </div>
 
-
 <script>
 function openInMargin(paperId) {
     var xhttp = new XMLHttpRequest();
@@ -178,12 +180,11 @@ function openInMargin(paperId) {
         if (this.readyState == 4 && this.status == 200) {
             var floatWindow = document.createElement("div");
             floatWindow.classList.add("floating-window");
-            floatWindow.style.position = 'absolute'; // Set position to absolute
-            floatWindow.innerHTML = '<button onclick="closeFloatingWindow(this)" style="cursor: pointer;">Close</button>';
+            floatWindow.innerHTML = '<button onclick="closeFloatingWindow(this)" style="cursor: pointer; position: absolute; top: 5px; right: 5px;">Close</button>';
             floatWindow.innerHTML += this.responseText;
 
             document.body.appendChild(floatWindow);
-            makeDraggable(floatWindow); // Make the window draggable
+            makeDraggable(floatWindow);
         }
     };
     xhttp.open("GET", "details.php?id=" + paperId, true);
