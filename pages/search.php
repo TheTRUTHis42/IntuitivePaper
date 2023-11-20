@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session at the beginning of the script
+?>
+
 <html lang = "en">
 <head>
     <title>ArXiv Database Search</title>
@@ -23,6 +27,7 @@ $sql = "SELECT categories FROM xie_import_6000 ";
 
 //save the query into a variable
 $results = $mysql->query($sql);
+echo $_SESSION['seclv'];
 ?>
 
 <div class="w-full">
@@ -32,17 +37,26 @@ $results = $mysql->query($sql);
                 <img src="assets/logo.svg" class="w-32" />
             </a>
             <div class="flex flex-row items-center space-x-2">
-                <a href="login.php">
-                    <button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button>
-                </a>
-                <a href="register.php">
-                    <button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button>
-                </a>
+                <?php
+                if (isset($_SESSION['userLoggedIn']) && $_SESSION['userLoggedIn'] == true) {
+                    if (isset($_SESSION['seclv']) && $_SESSION['seclv'] == 5) {
+                        // Admin user
+                        echo '<a href="admin_page.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button></a>';
+                    } else {
+                        // Regular user
+                        echo '<a href="my_account.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
+                    }
+                    // Logout button for logged-in users
+                    echo '<a href="logout.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Logout</button></a>';
+                } else {
+                    // Not logged in
+                    echo '<a href="login.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Login</button></a>';
+                    echo '<a href="register.php"><button style="border-color: #2D1F63; background-color: #2D1F63;" class="py-2 px-4 rounded-full border text-sm text-white">Register</button></a>';
+                }
+                ?>
             </div>
         </div>
     </div>
-
-
 
     <img src="assets/background.svg" class="absolute left-0 top-0 w-full" style="z-index: -1; min-height: 300px;" />
     <div class="mt-52 py-8 px-4 h-full" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 100%);">
@@ -107,4 +121,3 @@ $results = $mysql->query($sql);
     });
 </script>
 </html>
-
