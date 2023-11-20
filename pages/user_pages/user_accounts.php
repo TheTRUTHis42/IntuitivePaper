@@ -23,6 +23,10 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
     }
 
     $user = mysqli_fetch_assoc($result);
+    echo "<a href = 'user_accounts.php'>My Accounts  <a/>";
+    echo "<a href = 'browsing_history.php'>Browsing History <a/>";
+    echo "<a href = 'recommendation.php'>Recommendation Management <a/>";
+
     echo"<form action = 'account_editing.php'>
         <input type='hidden' name = 'userid' value = '".$user['user_id']."'>";
     echo"<h1>Account Information</h1>";
