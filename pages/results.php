@@ -43,7 +43,7 @@ if ($mysql->connect_errno) {
 }
 
 // SQL statement
-$sql = "SELECT * FROM xie_import_6000 WHERE 1 = 1 ";
+$sql = "SELECT * FROM paper_category_view WHERE 1 = 1 ";
 
 
 //get search results
@@ -58,7 +58,7 @@ echo $_SESSION['seclv'];
 
 //filters
 if($all != ''){
-    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR categories LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
+    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR sub_category LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
 } else {
     if($searchTitle != ''){
         $sql.= "AND title LIKE '%". $searchTitle. "%'";
@@ -67,7 +67,7 @@ if($all != ''){
     }if($searchDOI!= ''){
         $sql.= "AND doi LIKE '%". $searchDOI. "%'";
     }if($searchCategories != "ALL"){
-        $sql.= "AND categories LIKE '%". $searchCategories. "%'";
+        $sql.= "AND sub_category LIKE '%". $searchCategories. "%'";
     }
 }
 
@@ -96,7 +96,7 @@ if (!$results) {
                         echo '<a href="admin_page.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button></a>';
                     } else {
                         // Regular user
-                        echo '<a href="my_account.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
+                        echo '<a href="admin_accounts.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
                     }
                     // Logout button for logged-in users
                     echo '<a href="logout.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Logout</button></a>';
@@ -161,10 +161,10 @@ if (!$results) {
                             echo '<div class="">';
                                 echo '<div class="flex flex-row items-center space-x-3 flex-wrap">';
                                     echo '<h5 class="text-lg font-medium">';
-                                        echo '<a href="details.php?id=' . urlencode($row['id']) . '" class="text-blue-900 hover:text-blue-500">' . htmlspecialchars($row['title']) . '</a>';
+                                        echo '<a href="details.php?id=' . urlencode($row['paper_id']) . '" class="text-blue-900 hover:text-blue-500">' . htmlspecialchars($row['title']) . '</a>';
                                     echo '</h5>';
                                     echo '<div class="flex flex-row items-center justify-center flex-wrap">';
-                                        $categories = explode(', ', $row['categories']);
+                                        $categories = explode(', ', $row['sub_category']);
                                         foreach ($categories as $category) {
                                             echo '<a href="results.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
                                         }?>

@@ -23,7 +23,7 @@ if($mysql->connect_errno){
     exit();
 }
 //create querey that pulls from database
-$sql = "SELECT categories FROM xie_import_6000 ";
+$sql = "SELECT sub_category FROM paper_category_view ";
 
 //save the query into a variable
 $results = $mysql->query($sql);
@@ -44,7 +44,7 @@ echo $_SESSION['seclv'];
                         echo '<a href="admin_page.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Admin</button></a>';
                     } else {
                         // Regular user
-                        echo '<a href="my_account.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
+                        echo '<a href="admin_accounts.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">My Account</button></a>';
                     }
                     // Logout button for logged-in users
                     echo '<a href="logout.php"><button class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Logout</button></a>';

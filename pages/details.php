@@ -65,7 +65,7 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
 $id = $_GET['id'];
 
 // Create SQL query to fetch paper details
-$sql = "SELECT * FROM xie_import_6000 WHERE id = '" . $mysql->real_escape_string($id) . "'";
+$sql = "SELECT * FROM paper_category_view WHERE paper_id = '" . $mysql->real_escape_string($id) . "'";
 
 // Execute query
 $result = $mysql->query($sql);
@@ -119,10 +119,10 @@ if (!$paper) {
                     echo "<h1 class='text-3xl font-bold mb-2'>" . htmlspecialchars($paper['title']) . "</h1>";
                     echo "<p class='text-md mb-1'><strong>DOI:</strong> " . htmlspecialchars($paper['doi']) . "</p>";
                     echo "<p class='text-md mb-1'><strong>Authors:</strong> " . htmlspecialchars($paper['authors']) . "</p>";
-                    echo "<p class='text-md mb-1'><strong>Categories:</strong> " . htmlspecialchars($paper['categories']) . "</p>";
+                    echo "<p class='text-md mb-1'><strong>Categories:</strong> " . htmlspecialchars($paper['sub_categories']) . "</p>";
                     echo "<p class='text-md text-gray-600'>" . nl2br(htmlspecialchars($paper['abstract'])) . "</p>";
                 ?>
-                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $paper['id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
+                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $paper['paper_id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                 
             </div>
         </div>
