@@ -28,40 +28,61 @@
             <form action="register.php" method="post" class="border border-gray-200 rounded-2xl shadow-sm p-8 space-y-4">
                 <h1 class="text-2xl font-semibold">Register</h1>
                 <?php
+                // log into the database
+                $mysqli = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
+                if ($mysqli->connect_error) {
+                    die("Connection failed: " . $mysqli->connect_error);
+                }
+
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $email = $_POST['email'];
                     $username = $_POST['username'];
                     $password = $_POST['password'];
                     $confirmPassword = $_POST['confirmPassword'];
 
-                    if ($password === $confirmPassword) {
-                        $mysqli = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
-                        if ($mysqli->connect_error) {
-                            die("Connection failed: " . $mysqli->connect_error);
+                    // check if the email already exists
+                    if ($sql = $mysqli->prepare("SELECT * FROM users WHERE email = ?")) {
+                        $error = '';
+                        $sql->bind_param('s', $email);
+                        $sql->execute();
+                        // store results
+                        $sql->store_result();
+                        if ($sql->num_rows > 0) {
+                            $error .= "The email is already registered";
+                        } else {
+                            // validate password
+                            if (strlen($password) < 8) {
+                                $error .= "Password must be at least 8 chars long";
+                            } elseif ($confirmPassword !== $password) {
+                                $error .= "Passwords must match";
+                            }
+                            if ($error == '') {
+                                // Generate a unique token and hash the password
+                                $email_verification_token = bin2hex(random_bytes(16));
+                                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+                                // Insert the user along with the token
+                                $stmt = $mysqli->prepare("INSERT INTO users (email, username, password, email_verification_token) VALUES (?, ?, ?, ?)");
+                                $stmt->bind_param("ssss", $email, $username, $passwordHash, $email_verification_token);
+                                $stmt->execute();
+
+                                // Send an email with the verification link
+                                $verification_link = "https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/verify_email.php?token=" . $email_verification_token;
+                                $subject = "Verify your email";
+                                $message = "Please click on this link to verify your email: $verification_link";
+                                $header = "From: onajobi@usc.edu";
+                                $sendEmail = mail($email, $subject, $message, $header);
+
+                                echo "Registration successful. Please check your email for confirmation.";
+                            }
+                            $stmt->close();
+                            $mysqli->close();
                         }
-
-                        // Generate a unique token and hash the password
-                        $email_verification_token = bin2hex(random_bytes(16));
-                        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-                        // Insert the user along with the token
-                        $stmt = $mysqli->prepare("INSERT INTO users (email, username, password, email_verification_token) VALUES (?, ?, ?, ?)");
-                        $stmt->bind_param("ssss", $email, $username, $passwordHash, $email_verification_token);
-                        $stmt->execute();
-
-                        // Send an email with the verification link
-                        $verification_link = "https://louisxie.webdev.iyaserver.com/acad276/Intuitive%20Paper/verify_email.php?token=" . $email_verification_token;
-                        mail($email, "Verify your email", "Please click on this link to verify your email: $verification_link");
-
-                        echo "Registration successful. Please check your email for confirmation.";
-
-                        $stmt->close();
-                        $mysqli->close();
-                    } else {
-                        echo "<p style='color: red;'>Please check and re-enter your password.</p>";
+                        echo "<p style='color: red;'>".$error."</p>";
                     }
                 }
                 ?>
+
                 <div class="space-y-2">
                     <label class="block">Email</label>
                     <input type="email" name="email" required placeholder="Type here" class="w-full py-2 px-4 rounded-lg border border-gray-200 shadow-sm" />
