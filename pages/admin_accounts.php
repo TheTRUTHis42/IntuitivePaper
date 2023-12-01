@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Determine action: add, edit, or delete
-    $action = $_POST['action'] ?? '';
+    $action = isset($_POST['action']) ? $_POST['action'] : '';
 
     switch ($action) {
         case 'add':
