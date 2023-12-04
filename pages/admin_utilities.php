@@ -2,9 +2,9 @@
 session_start();
 
 // Database connection
-$mysql = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
-if ($mysql->connect_error) {
-    die("Connection failed: " . $mysql->connect_error);
+$mysqli = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
 }
 
 // CSRF Token for form submission
@@ -27,11 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($action) {
         case 'add':
             // Logic for adding a new entry
+            $insertStmt = $mysqli->prepare("INSERT INTO xie_import_6000 (title, categories) VALUES (?, ?)");
+            $insertStmt->bind_param("ss", $title, $categories);
+            $insertStmt->execute();
+            $insertStmt->close();
             break;
         case 'edit':
             // Logic for editing an existing entry
             if (!empty($paperId)) {
-                $updateStmt = $mysql->prepare("UPDATE xie_import_6000 SET title = ?, categories = ? WHERE id = ?");
+                $updateStmt = $mysqli->prepare("UPDATE xie_import_6000 SET title = ?, categories = ? WHERE id = ?");
                 $updateStmt->bind_param("sss", $title, $categories, $paperId);
                 $updateStmt->execute();
                 $updateStmt->close();
@@ -40,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         case 'delete':
             // Logic for deleting an entry
             if (!empty($paperId)) {
-                $stmt = $mysql->prepare("DELETE FROM xie_import_6000 WHERE id = ?");
+                $stmt = $mysqli->prepare("DELETE FROM xie_import_6000 WHERE id = ?");
                 $stmt->bind_param("s", $paperId);
                 $stmt->execute();
                 $stmt->close();
@@ -52,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Fetching data from the database
 $searchTerm = $_GET['search'] ?? '';
 $searchType = $_GET['searchType'] ?? 'ALL';
-$query = "SELECT id, title, categories FROM xie_import_6000";
+$query = "SELECT paper_id AS id, title, sub_category AS categories FROM paper_category_view";
 if (!empty($searchTerm) && $searchType != 'ALL') {
-    $searchTerm = $mysql->real_escape_string($searchTerm);
+    $searchTerm = $mysqli->real_escape_string($searchTerm);
     $query .= " WHERE $searchType LIKE '%$searchTerm%'";
 }
 
-$results = $mysql->query($query);
+$results = $mysqli->query($query);
 ?>
 
 <!DOCTYPE html>
