@@ -1,5 +1,15 @@
 <?php
 session_start();
+?>
+<html>
+    <body>
+    <a href="../search.php">
+        <img src="../assets/logo.svg"/><br><br>
+    </a>
+    </body>
+</html>
+<?php
+
 
 // Database connection
 $mysql = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");

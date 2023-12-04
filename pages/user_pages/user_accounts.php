@@ -12,7 +12,14 @@ session_start();
 
             gtag('config', 'G-85R8SV1X10');
         </script>
+        <title>ArXiv Database Search</title>
+
     </head>
+<body>
+    <a href="../search.php">
+        <img src="../assets/logo.svg"/><br><br>
+    </a>
+</body>
 </html>
 <?php
 

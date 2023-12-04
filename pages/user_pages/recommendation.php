@@ -1,5 +1,14 @@
 <?php
 session_start();
+?>
+<html>
+    <body>
+    <a href="../search.php">
+        <img src="../assets/logo.svg"/><br><br>
+    </a>
+    </body>
+</html>
+<?php
 
 // Database connection
 $mysql = new mysqli("webdev.iyaserver.com", "louisxie_user1", "sampleimport", "louisxie_IPImportTest");
@@ -29,18 +38,20 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
     echo"<h1>Recommendation Management</h1>";
     while ($currentrow = $result -> fetch_assoc()) {
         echo $currentrow['sub_categories_name'];
-        echo "<a href = 'delete_category.php'> Delete<a/>";
+        echo "<form action = 'delete_category.php'> <input type='hidden' name = 'id' value = ". $currentrow['user_x_category_id'] . ">";
+        echo "<input type='submit'value = 'Delete'>"."<br>";
     }
-    echo "<form action = 'add_category.php'><h3>Add Category</h3></form>";
+
+    echo "</form><form action = 'update_category.php'><h3>Add Category</h3>";
     $sql = "SELECT * FROM sub_categories ";
     //save the query into a variable
     $results = $mysql->query($sql);
-    echo "<select id='searchFilter''> ";
+    echo "<select name ='category''> ";
     while ($currentrow = $results->fetch_assoc()){
-        echo "<option " .
-            " value='" . $currentrow['sub_categories_id'] . "'>" .
+        echo "<option name = 'category' value ='" . $currentrow['sub_categories_id'] . "'>" .
             $currentrow['sub_categories_name'] . "</option>";
     }
+    echo "</select><input type='submit' ></form>";
 }
 
 ?>
