@@ -78,18 +78,20 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
 
     $results1 = $mysql -> query($sql1);
 
-    $sql2 = "SELECT COUNT(*) AS totalcategory, prim_category_id
-         FROM sub_categories
+    $sql2 = "SELECT COUNT(*) AS totalcategory, prim_category
+         FROM category_view
          GROUP BY prim_category_id";
     $results2 = $mysql -> query($sql2);
 
     $currentrow1 = $results1->fetch_assoc();
-    echo "<br><br>Totals visualized...<strong>".$currentrow1["totalsubcategory"]."</strong><br>";
+    echo "<h2>So how many categories are there in total?</h2>";
+
+    echo "Totals visualized...<strong>".$currentrow1["totalsubcategory"]."</strong><br>";
     $results2 = $mysql -> query($sql2);
     while($currentrow = $results2 ->fetch_assoc()){
-        echo "<div class='box'>".$currentrow["prim_category_id"].":</div>";
+        echo "<div class='box'>".$currentrow["prim_category"].":</div>";
 
-        echo "    <div class='box bar' style='width:".(floatval($currentrow["totalcategory"])/2)."px'>&nbsp;</div>";
+        echo "    <div class='box bar' style='width:".(floatval($currentrow["totalcategory"])*2)."px'>&nbsp;</div>";
         echo $currentrow["totalcategory"]."<br style='clear:both'>";
     }
 }
