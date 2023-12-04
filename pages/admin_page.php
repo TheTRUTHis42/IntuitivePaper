@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 // Check if user is logged in and has admin privileges
 if (!isset($_SESSION['userLoggedIn']) || $_SESSION['seclv'] != 5) {
     header("Location: login.php");

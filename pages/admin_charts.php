@@ -1,3 +1,13 @@
+
+<html>
+<head>
+
+    <title>ArXiv Database Search</title>
+
+</head>
+<body>
+    <img src = "assets/analytics.png">
+</body>
 <?php
 // Logic to fetch and prepare data for chart display
 // site traffic data based on dates, user activities, etc.
