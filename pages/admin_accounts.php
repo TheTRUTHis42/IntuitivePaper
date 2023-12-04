@@ -20,18 +20,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("CSRF token validation failed");
     }
 
-    // Determine action: add, edit, or delete
-    $action = isset($_POST['action']) ? $_POST['action'] : '';
+    $action = $_POST['action'] ?? '';
 
     switch ($action) {
         case 'add':
-            // Logic to add a new account
+            $newUsername = $_POST['newUsername'];
+            $newPassword = $_POST['newPassword']; 
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            // Default values for other fields
+            $email = 'default@email.com';
+            $fname = 'DefaultFirstName';
+            $lname = 'DefaultLastName';
+            $isEmailVerified = 1;
+            $seclv = 1;
+            $userBio = 'Default bio';
+
+            $query = "INSERT INTO users (username, password, email, fname, lname, is_email_verified, seclv, user_bio) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $mysqli->prepare($query);
+            $stmt->bind_param("sssssiis", $newUsername, $hashedPassword, $email, $fname, $lname, $isEmailVerified, $seclv, $userBio);
+            if (!$stmt->execute()) {
+                echo "Error adding new user: " . $stmt->error;
+            }
+            $stmt->close();
             break;
+
         case 'edit':
-            // Logic to edit an existing account
             $userIdToEdit = $_POST['userId'];
-            $newUsername = $_POST['newUsername']; // Assuming new username is passed
-            $newPassword = $_POST['newPassword']; // Assuming new password is passed
+            $newUsername = $_POST['newUsername'];
+            $newPassword = $_POST['newPassword']; // Update with hashed password if needed
             $mysqli->query("UPDATE users SET username = '" . $mysqli->real_escape_string($newUsername) . "', password = '" . $mysqli->real_escape_string($newPassword) . "' WHERE user_id = " . intval($userIdToEdit));
             break;
         case 'delete':
@@ -49,13 +67,14 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
 <html lang="en">
 <head>
     <title>Account Management</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for simpler DOM manipulation -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
 <div class="w-full">
     <h2 class="text-2xl font-bold mb-4">Account Management</h2>
     <button id="editMode" class="py-2 px-4 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Edit</button>
+    <button id="addMode" class="py-2 px-4 ml-2 rounded-full border border-gray-200 transition hover:bg-gray-100 bg-white text-sm text-gray-700">Add</button>
     <form id="userActionForm" method="POST" action="admin_accounts.php" class="mt-4">
         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
         <input type="hidden" name="action" id="actionInput">
@@ -88,7 +107,6 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
 </div>
 
 <script>
-    // JavaScript functionality for edit and delete operations
     document.getElementById('editMode').addEventListener('click', function() {
         const table = document.getElementById('accountsTable');
         for (let row of table.rows) {
@@ -99,7 +117,6 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
         }
     });
 
-    // Delete user
     $(document).on('click', '.deleteUser', function() {
         const userId = $(this).data('userid');
         if (confirm('Are you sure you want to delete this user?')) {
@@ -109,7 +126,6 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
         }
     });
 
-    // Edit user
     $(document).on('click', '.editUser', function() {
         const userId = $(this).data('userid');
         const username = prompt("Enter new username:");
@@ -117,6 +133,18 @@ $users = $mysqli->query("SELECT user_id, username, password, creation_date FROM 
         if (username !== null && password !== null) {
             $('#actionInput').val('edit');
             $('#userIdInput').val(userId);
+            $('#newUsernameInput').val(username);
+            $('#newPasswordInput').val(password);
+            $('#userActionForm').submit();
+        }
+    });
+
+    // Add user functionality
+    document.getElementById('addMode').addEventListener('click', function() {
+        const username = prompt("Enter new username:");
+        const password = prompt("Enter new password:");
+        if (username !== null && password !== null) {
+            $('#actionInput').val('add');
             $('#newUsernameInput').val(username);
             $('#newPasswordInput').val(password);
             $('#userActionForm').submit();
