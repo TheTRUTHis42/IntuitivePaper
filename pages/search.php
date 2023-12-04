@@ -33,7 +33,7 @@ if($mysql->connect_errno){
     exit();
 }
 //create querey that pulls from database
-$sql = "SELECT sub_category FROM paper_category_view ";
+$sql = "SELECT sub_categories FROM sub_categories ";
 
 //save the query into a variable
 $results = $mysql->query($sql);

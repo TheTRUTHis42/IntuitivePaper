@@ -12,7 +12,7 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
     exit();
 }else {
     $userId = $_SESSION['userId']; // Assuming user ID is stored in session
-    $browsesql = "SELECT * From user_x_category WHERE user_id = " . $userId;
+    $browsesql = "SELECT * From user_x_category, sub_categories WHERE sub_categories.sub_categories_id = user_x_category.sub_category_id AND user_id = " . $userId;
 
     $result = $mysql->query($browsesql);
 
@@ -28,18 +28,18 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
 
     echo"<h1>Recommendation Management</h1>";
     while ($currentrow = $result -> fetch_assoc()) {
-        echo $currentrow['sub_category'];
-        echo "<a href = 'delete_category.php'>Delete<a/>";
+        echo $currentrow['sub_categories_name'];
+        echo "<a href = 'delete_category.php'> Delete<a/>";
     }
-    echo "<form action = 'add_category.php'>Add Category</form>";
-    $sql = "SELECT * FROM prim_category ";
+    echo "<form action = 'add_category.php'><h3>Add Category</h3></form>";
+    $sql = "SELECT * FROM sub_categories ";
     //save the query into a variable
     $results = $mysql->query($sql);
     echo "<select id='searchFilter''> ";
     while ($currentrow = $results->fetch_assoc()){
         echo "<option " .
-            " value='" . $currentrow['prim_category_id'] . "'>" .
-            $currentrow['prim_category'] . "</option>";
+            " value='" . $currentrow['sub_categories_id'] . "'>" .
+            $currentrow['sub_categories_name'] . "</option>";
     }
 }
 
