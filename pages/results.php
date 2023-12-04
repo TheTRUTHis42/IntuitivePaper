@@ -5,6 +5,15 @@ session_start(); // Start the session at the beginning of the script
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-85R8SV1X10"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-85R8SV1X10');
+    </script>
     <title>ArXiv Database Search Results</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -25,6 +34,7 @@ session_start(); // Start the session at the beginning of the script
             resize: both; /* Enables resizing */
         }
     </style>
+
 </head>
 <body>
 <?php

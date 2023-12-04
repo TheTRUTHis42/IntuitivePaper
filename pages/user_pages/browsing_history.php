@@ -28,20 +28,22 @@ if (isset($_SESSION['userLoggedIn'], $_SESSION['userId'], $_GET['id']) && $_SESS
 
     echo"<h1>Browsing History</h1>";
     while ($currentrow = $result -> fetch_assoc()) {
-        $papersql = "SELECT title, sub_category, prim_category, browse_time FROM paper_category_view, paper_x_user 
+        $papersql = "SELECT title, sub_category, prim_category, browse_time, paper_x_user.paper_id FROM paper_category_view, paper_x_user 
                     WHERE paper_category_view.paper_id = paper_x_user.paper_id AND
                           paper_x_user.user_id = ".$userId;
         $result2 = $mysql->query($papersql);
-        if(!$result) {
+
+        if(!$result2) {
             echo "Your SQL: " . $browsesql . "<br><br>";
             echo "SQL Error: " . mysqli_error($conn);
             exit();
         }
-        while ($currenthistory = $result -> fetch_assoc()) {
-            echo "<strong>".$currenthistory["title"]."</strong><br>";
-            echo $currenthistory["sub_category"]."<br>";
-            echo $currenthistory["prim_category"]."<br>";
-            echo $currenthistory["browse_time"]."<br>";
+        while ($currenthistory = $result2 -> fetch_assoc()) {
+            echo "<strong><h3><a href = 'https://arxiv.org/pdf/".$currenthistory["paper_id"]."'target='_blank' rel='noreferrer'>".$currenthistory['title']."</a></h3></strong>";
+
+            echo "<strong>Category: ".$currenthistory["prim_category"]."</strong>";
+            echo " (".$currenthistory["sub_category"].")<br>";
+            echo $currenthistory["browse_time"]."<br><hr>";
 
 
         }
