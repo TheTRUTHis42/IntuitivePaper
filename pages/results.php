@@ -1,5 +1,81 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start(); // Start the session at the beginning of the script
+
+// Define items per page
+$itemsPerPage = 25;
+
+// Get the current page number from the URL, defaulting to page 1 if not set
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = max($page, 1); // Ensure the page is at least 1
+
+// Calculate the offset for the query
+$offset = ($page - 1) * $itemsPerPage;
+
+// Database connection
+$mysql = new mysqli(
+    "webdev.iyaserver.com",
+    "louisxie_user1",
+    "sampleimport",
+    "louisxie_IPImportTest"
+);
+
+// Connection error test
+if ($mysql->connect_errno) {
+    echo "Database Connection Error: " . $mysql->connect_errno;
+    exit();
+}
+
+// Check if search parameters are set
+$all = isset($_REQUEST['all']) ? $_REQUEST['all'] : '';
+$searchTitle = isset($_REQUEST['search_title']) ? $_REQUEST['search_title'] : '';
+$searchAuthor = isset($_REQUEST['author']) ? $_REQUEST['author'] : '';
+$searchDOI = isset($_REQUEST['doi']) ? $_REQUEST['doi'] : '';
+$searchCategories = isset($_REQUEST['categories']) ? $_REQUEST['categories'] : '';
+$filterType = $_REQUEST['filter_type'];
+
+// Build the SQL query with filters
+$sql = "SELECT * FROM paper_category_view WHERE 1 = 1 ";
+
+// Add conditions based on filters
+if($all != ''){
+    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR sub_category LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
+} else {
+    if($searchTitle != ''){
+        $sql.= "AND title LIKE '%". $searchTitle. "%'";
+    }if($searchAuthor!= ''){
+        $sql.= "AND authors LIKE '". $searchAuthor. "%'";
+    }if($searchDOI!= ''){
+        $sql.= "AND doi LIKE '%". $searchDOI. "%'";
+    }if($searchCategories != "ALL"){
+        $sql.= "AND sub_category LIKE '%". $searchCategories. "%'";
+    }
+}
+
+// Amend the SQL statement to include a LIMIT clause for pagination
+$sql .= " LIMIT $offset, $itemsPerPage";
+
+// Execute query
+$results = $mysql->query($sql);
+
+// Results error handling
+if (!$results) {
+    echo "<hr>SQL Error: " . $mysql->error . "<br>";
+    echo "Output SQL: " . $sql . "</hr>";
+    exit();
+}
+
+// Calculate total number of pages
+$totalQuery = $mysql->query("SELECT COUNT(*) as total FROM paper_category_view WHERE 1 = 1 ");
+if (!$totalQuery) {
+    echo "<hr>SQL Error in Total Count Query: " . $mysql->error . "<br>";
+    exit();
+}
+$totalRow = $totalQuery->fetch_assoc();
+$totalPages = ceil($totalRow['total'] / $itemsPerPage);
+
 ?>
 
 <!DOCTYPE html>
@@ -37,60 +113,6 @@ session_start(); // Start the session at the beginning of the script
 
 </head>
 <body>
-<?php
-// Database connection
-$mysql = new mysqli(
-    "webdev.iyaserver.com",
-    "louisxie_user1",
-    "sampleimport",
-    "louisxie_IPImportTest"
-);
-
-// Connection error test
-if ($mysql->connect_errno) {
-    echo "Database Connection Error: " . $mysql->connect_errno;
-    exit();
-}
-
-// SQL statement
-$sql = "SELECT * FROM paper_category_view WHERE 1 = 1 ";
-
-
-//get search results
-$all = $_REQUEST['all'];
-$searchTitle = $_REQUEST['search_title'];
-$searchAuthor = $_REQUEST['author'];
-$searchDOI = $_REQUEST['doi'];
-$searchCategories = $_REQUEST['categories'];
-$filterType = $_REQUEST['filter_type'];
-
-//echo $_SESSION['seclv'];
-
-//filters
-if($all != ''){
-    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR sub_category LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
-} else {
-    if($searchTitle != ''){
-        $sql.= "AND title LIKE '%". $searchTitle. "%'";
-    }if($searchAuthor!= ''){
-        $sql.= "AND authors LIKE '". $searchAuthor. "%'";
-    }if($searchDOI!= ''){
-        $sql.= "AND doi LIKE '%". $searchDOI. "%'";
-    }if($searchCategories != "ALL"){
-        $sql.= "AND sub_category LIKE '%". $searchCategories. "%'";
-    }
-}
-
-// Execute query
-$results = $mysql->query($sql);
-
-// Results error handling
-if (!$results) {
-    echo "<hr>SQL Error: " . $mysql->error . "<br>";
-    echo "Output SQL: " . $sql . "</hr>";
-    exit();
-}
-?>
 
 <div class="w-full" style="background-image: url('assets/background.svg'); background-repeat: no-repeat; background-size: cover;">
     <div class="absolute top-0 w-full py-4 px-3" style="background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.8) 100%);">
@@ -187,11 +209,19 @@ if (!$results) {
                                 <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/0<?php echo $row['paper_id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                             </div>
                         </div>
+                            <!-- Pagination Links -->
                         <?php
                         $counter++;
                     }
                     ?>
                 </div>
+                <nav>
+                    <?php
+                    for ($i = 1; $i <= $totalPages; $i++) {
+                        echo '<a href="?page=' . $i . '">' . $i . '</a> ';
+                    }
+                    ?>
+                </nav>
             </div>
         </div>
     </div>
@@ -262,4 +292,3 @@ function closeFloatingWindow(button) {
 
 </body>
 </html>
-
