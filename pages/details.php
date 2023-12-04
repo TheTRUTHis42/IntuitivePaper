@@ -119,10 +119,10 @@ if (!$paper) {
                     echo "<h1 class='text-3xl font-bold mb-2'>" . htmlspecialchars($paper['title']) . "</h1>";
                     echo "<p class='text-md mb-1'><strong>DOI:</strong> " . htmlspecialchars($paper['doi']) . "</p>";
                     echo "<p class='text-md mb-1'><strong>Authors:</strong> " . htmlspecialchars($paper['authors']) . "</p>";
-                    echo "<p class='text-md mb-1'><strong>Categories:</strong> " . htmlspecialchars($paper['sub_categories']) . "</p>";
+                    echo "<p class='text-md mb-1'><strong>Categories:</strong> " . htmlspecialchars($paper['sub_category']) . "</p>";
                     echo "<p class='text-md text-gray-600'>" . nl2br(htmlspecialchars($paper['abstract'])) . "</p>";
                 ?>
-                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $paper['paper_id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
+                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/0<?php echo $paper['paper_id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                 
             </div>
         </div>

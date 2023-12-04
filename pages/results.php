@@ -54,7 +54,7 @@ $searchDOI = $_REQUEST['doi'];
 $searchCategories = $_REQUEST['categories'];
 $filterType = $_REQUEST['filter_type'];
 
-echo $_SESSION['seclv'];
+//echo $_SESSION['seclv'];
 
 //filters
 if($all != ''){
@@ -169,12 +169,12 @@ if (!$results) {
                                             echo '<a href="results.php?search_title=&author=&doi=&categories=' . urlencode($category) . '" class="mr-2 mb-2 border border-gray-200 rounded-full py-0.5 px-3 text-gray-500 text-xs cursor-pointer hover:bg-gray-100">' . htmlspecialchars($category) . '</a>';
                                         }?>
                                     </div>
-                                    <button onclick="openInMargin('<?php echo $row['id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in Margin</button>
+                                    <button onclick="openInMargin('<?php echo $row['paper_id']; ?>')" class="text-blue-500 hover:text-blue-700">Open in Margin</button>
                                 </div>
                                 <p class="mt-0 text-md text-gray-500"><?php echo $row['doi']; ?></p>
                                 <p class="mt-1 text-sm italic text-gray-400">By: <?php echo $row['authors']; ?></p>
                                 <p class="mt-1 text-sm text-gray-600"><?php echo nl2br(htmlspecialchars($row['abstract'])); ?></p>
-                                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/<?php echo $row['id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
+                                <a class="mt-1 block text-blue-400 underline cursor-pointer hover:text-blue-500 focus:outline-none" href="https://arxiv.org/pdf/0<?php echo $row['paper_id']; ?>" target="_blank" rel="noreferrer">View PDF</a>
                             </div>
                         </div>
                         <?php
