@@ -38,20 +38,25 @@ $filterType = $_REQUEST['filter_type'];
 
 // Build the SQL query with filters
 $sql = "SELECT * FROM paper_category_view WHERE 1 = 1 ";
+$totalSql = "SELECT COUNT(*) as total FROM paper_category_view WHERE 1 = 1 "; // For total count
 
 // Add conditions based on filters
-if($all != ''){
-    $sql.= "AND title LIKE '%". $all. "%'" . "OR authors LIKE '%". $all. "%'" . "OR doi LIKE '%". $all. "%'" . "OR sub_category LIKE '%". $all. "%'" . "OR abstract LIKE '%". $all. "%'";
-} else {
-    if($searchTitle != ''){
-        $sql.= "AND title LIKE '%". $searchTitle. "%'";
-    }if($searchAuthor!= ''){
-        $sql.= "AND authors LIKE '". $searchAuthor. "%'";
-    }if($searchDOI!= ''){
-        $sql.= "AND doi LIKE '%". $searchDOI. "%'";
-    }if($searchCategories != "ALL"){
-        $sql.= "AND sub_category LIKE '%". $searchCategories. "%'";
-    }
+if ($filterType == 'search_title' && $searchTitle != '') {
+    $sql .= " AND title LIKE '%" . $searchTitle . "%'";
+    $totalSql .= " AND title LIKE '%" . $searchTitle . "%'";
+} elseif ($filterType == 'author' && $searchAuthor != '') {
+    $sql .= " AND authors LIKE '%" . $searchAuthor . "%'";
+    $totalSql .= " AND authors LIKE '%" . $searchAuthor . "%'";
+} elseif ($filterType == 'doi' && $searchDOI != '') {
+    $sql .= " AND doi LIKE '%" . $searchDOI . "%'";
+    $totalSql .= " AND doi LIKE '%" . $searchDOI . "%'";
+} elseif ($filterType == 'categories' && $searchCategories != 'ALL') {
+    $sql .= " AND sub_category LIKE '%" . $searchCategories . "%'";
+    $totalSql .= " AND sub_category LIKE '%" . $searchCategories . "%'";
+} elseif ($all != '') {
+    // If 'all' field is used, apply it to all categories
+    $sql .= " AND (title LIKE '%" . $all . "%' OR authors LIKE '%" . $all . "%' OR doi LIKE '%" . $all . "%' OR sub_category LIKE '%" . $all . "%' OR abstract LIKE '%" . $all . "%')";
+    $totalSql .= " AND (title LIKE '%" . $all . "%' OR authors LIKE '%" . $all . "%' OR doi LIKE '%" . $all . "%' OR sub_category LIKE '%" . $all . "%' OR abstract LIKE '%" . $all . "%')";
 }
 
 // Amend the SQL statement to include a LIMIT clause for pagination
@@ -68,14 +73,13 @@ if (!$results) {
 }
 
 // Calculate total number of pages
-$totalQuery = $mysql->query("SELECT COUNT(*) as total FROM paper_category_view WHERE 1 = 1 ");
+$totalQuery = $mysql->query($totalSql);
 if (!$totalQuery) {
     echo "<hr>SQL Error in Total Count Query: " . $mysql->error . "<br>";
     exit();
 }
 $totalRow = $totalQuery->fetch_assoc();
 $totalPages = ceil($totalRow['total'] / $itemsPerPage);
-
 ?>
 
 <!DOCTYPE html>
