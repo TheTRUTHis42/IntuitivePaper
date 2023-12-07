@@ -6,6 +6,7 @@
 
 </head>
 <body>
+    <img src = "assets/currentanalytics.png">
     <img src = "assets/analytics.png">
 </body>
 <?php
